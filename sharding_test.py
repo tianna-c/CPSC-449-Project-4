@@ -48,16 +48,70 @@ def sharding():
 	con = sqlite3.connect('stats.db', detect_types=sqlite3.PARSE_DECLTYPES)
 	cur = con.cursor()
 
-	con_User= sqlite3.connect('userShard.db')
-	cur_User= con_User.cursor()
-	cur_User.execute("CREATE TABLE IF NOT EXISTS users(user_id INTEGER, username VARCHAR UNIQUE, uuid VARCHAR PRIMARY KEY)")
-
 	userID = ""
 
 	for i in range(3):
 		con_temp = sqlite3.connect('shard_' + str(i+1) + '.db')
 		cur_temp = con_temp.cursor()
-		cur_temp.execute("CREATE TABLE IF NOT EXISTS games(user_id INTEGER NOT NULL, game_id INTEGER NOT NULL, finished DATE DEFAULT CURRENT_TIMESTAMP, guesses INTEGER, won BOOLEAN, PRIMARY KEY(user_id, game_id))")
+		cur_temp.execute("CREATE TABLE IF NOT EXISTS games (user_id INTEGER NOT NULL, game_id INTEGER NOT NULL, finished DATE DEFAULT CURRENT_TIMESTAMP, guesses INTEGER, won BOOLEAN, PRIMARY KEY(user_id, game_id))")
+		cur_temp.execute("CREATE INDEX games_won_idx ON games(won)")
+		cur_temp.execute(
+		"""
+		CREATE VIEW wins
+		AS
+		SELECT
+        	user_id,
+        	COUNT(won)
+    		FROM
+        	games
+    		WHERE
+        	won = TRUE
+    		GROUP BY
+        	user_id
+    		ORDER BY
+        	COUNT(won) DESC
+		""")
+		cur_temp.execute(
+		"""
+		CREATE VIEW streaks
+		AS
+    		WITH ranks AS (
+        	SELECT DISTINCT
+            	user_id,
+            	finished,
+            	RANK() OVER(PARTITION BY user_id ORDER BY finished) AS rank
+        	FROM
+            	games
+        	WHERE
+            	won = TRUE
+        	ORDER BY
+            	user_id,
+            	finished
+    		),
+    		groups AS (
+        	SELECT
+            	user_id,
+            	finished,
+            	rank,
+            	DATE(finished, '-' || rank || ' DAYS') AS base_date
+        	FROM
+            	ranks
+    		)
+    		SELECT
+        	user_id,
+        	COUNT(*) AS streak,
+        	MIN(finished) AS beginning,
+        	MAX(finished) AS ending
+    		FROM
+        	groups
+    		GROUP BY
+        	user_id, base_date
+    		HAVING
+        	streak > 1
+    		ORDER BY
+        	user_id,
+        	finished
+        	""")
 	
 	try:
 		#Iterate through user DB, calculate shard using UUID, then
@@ -78,10 +132,6 @@ def sharding():
 			#Connect to corresponding shard DB
 			con_temp = sqlite3.connect('shard_' + str(uuid_shard_num) + '.db', detect_types=sqlite3.PARSE_DECLTYPES)
 			cur_temp = con_temp.cursor()
-
-			#Insert this row into User Shard
-			cur_User.execute("INSERT INTO users VALUES(?, ?, ?)", (str(row[0]), str(row[1]), str(row[2])))
-			con_User.commit()
 			
 			#Fetch the corresponding user's game data then insert into shard DB
 			fetch_games = cur.execute("SELECT * FROM games WHERE user_id = ?", (row[0],)).fetchall()
@@ -93,7 +143,6 @@ def sharding():
 				con_temp.commit()
 			con_temp.close()
 		con.close()
-		con_User.close()
 	except:
 		print("ERROR!")
 
