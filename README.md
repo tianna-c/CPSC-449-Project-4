@@ -15,8 +15,8 @@
 ![VirtualBox_Tuffix 2020 Edition_08_04_2022_19_58_09](https://user-images.githubusercontent.com/39601543/162554364-03d65d09-02ec-4de7-83a5-5adcbb0efc2d.png)
 
 # Game State Microservice
-> Commands in File "XXXXX.py"<br>
-> Description: 'XXXXX.py' handles 
+> Commands in File "Track.py"<br>
+> Description: 'Track.py' handles tracking the start of a new game to ensure users cannot play a game they have already finished, updating the amount of guesses a user has made, and restoring the state of a game with words the user has guessed & number of remaining guesses. 
               
               /XXXXX/  - 
               /XXXXX/  - 
