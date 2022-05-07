@@ -18,24 +18,24 @@
 > Commands in File "Track.py"<br>
 > Description: 'Track.py' handles tracking the start of a new game to ensure users cannot play a game they have already finished, updating the amount of guesses a user has made, and restoring the state of a game with words the user has guessed & number of remaining guesses. 
               
-              /XXXXX/  - 
-              /XXXXX/  - 
-              /XXXXX/  - 
+              /game-start/{userID}/{gameID}  - 
+              /game-update/{userID}/{gameID}  - 
+              /game-restore/{userID}/{gameID}  - 
 
-1. /XXXXX/
-      The 'XXXXX' command will XXXXXXXXXXXXXXXXXXXXXXXXX.
+1. /game-start/{userID}/{gameID}
+      The '/game-start/{userID}/{gameID}' command will XXXXXXXXXXXXXXXXXXXXXXXXX.
    
    ![VirtualBox_Tuffix 2020 Edition_08_04_2022_19_58_09](https://user-images.githubusercontent.com/39601543/162554364-03d65d09-02ec-4de7-83a5-5adcbb0efc2d.png)
 ###### ^Above image should be replaced 
 
-2. /XXXXX/
-      The 'XXXXX' command will XXXXXXXXXXXXXXXXXXXXXXXXXXXX.
+2. /game-update/{userID}/{gameID}
+      The '/game-update/{userID}/{gameID}' command will XXXXXXXXXXXXXXXXXXXXXXXXXXXX.
    
    ![VirtualBox_Tuffix 2020 Edition_08_04_2022_19_58_09](https://user-images.githubusercontent.com/39601543/162554364-03d65d09-02ec-4de7-83a5-5adcbb0efc2d.png)
 ###### ^Above image should be replaced 
 
-3. /XXXXX/
-      The 'XXXXX' command will XXXXXXXXXXXXXXXXXXXXXXXXXXXX.
+3. /game-restore/{userID}/{gameID}
+      The '/game-restore/{userID}/{gameID}' command will XXXXXXXXXXXXXXXXXXXXXXXXXXXX.
    
    ![VirtualBox_Tuffix 2020 Edition_08_04_2022_19_58_09](https://user-images.githubusercontent.com/39601543/162554364-03d65d09-02ec-4de7-83a5-5adcbb0efc2d.png)
 ###### ^Above image should be replaced 
