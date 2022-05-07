@@ -40,7 +40,7 @@ def create_uuid():
 	con.commit()
 
 #Only uncomment for 1st time run where Stats.db hasn't been altered yet
-#create_uuid()
+create_uuid()
 
 def sharding():
 	sqlite3.register_converter('GUID', lambda b: uuid.UUID(bytes_le=b))
