@@ -7,7 +7,6 @@ conn = sqlite3.connect('shard_1.db')
 cur = conn.cursor()
 cur.execute("SELECT * FROM games")
 allGames = cur.fetchall()
-stats = {}
 games = "Games"
 
 for row in allGames:
@@ -17,8 +16,8 @@ for row in allGames:
 	finished = row[2]
 	guesses = row[3]
 	won = row[4]
-	redisClient.zadd(games, user_id, "user_id", game_id, "game_id")
-	redisClient.zadd(games, finished, "finished", guesses, "guesses", won, "won")
+	
+	#redisClient.zadd(games, user_id, "user_id", game_id, "game_id", finished, "finished", guesses, "guesses", won, "won")
 	#r.zadd("games", row[0], row[1], row[2], row[3], row[4])
 	#r.getall("games")
 print("Success!")
